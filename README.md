@@ -12,7 +12,7 @@ C++ typesafe bindings for json. Supports rapidjson and others 3rd party json lib
 
 # Usage at a glance
 
-This simple example parses a JSON string into a real c++ structure/class.
+This simple example parses a JSON string into a real c++ structure/class, which is then modified and re-serialized
 
 ~~~~~~~~~~cpp
 #include "tsobject.hpp"
@@ -81,4 +81,26 @@ int main()
 // rapidjson::serialize(ost, true, an_example);
 	std::cout << ost.str() << std::endl;
 }
+
+Output:
+
+1, 1, 456, 0.234, Test
+[ 1, 2, 3, 4, 5,  ]
+
+{
+    "a_boolean": null,
+    "a_null": 25,
+    "a_number": 0.468,
+    "a_string": "Test again",
+    "an_array": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10
+    ],
+    "an_int": 912
+}
+
 ~~~~~~~~~~
