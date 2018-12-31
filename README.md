@@ -24,62 +24,62 @@ using namespace tsjson;
 
 int main()
 {
-	const auto json = "{ \"a_null\" : null, "
-						"\"a_boolean\" : true, "
-						"\"an_int\" : 456, "
-						"\"a_number\" : 0.234, "
-						"\"a_string\" : \"Test\", "
-					    "\"an_array\" : [1, 2, 3, 4, 5], "
-					"}";
+  const auto json = "{ \"a_null\" : null, "
+            "\"a_boolean\" : true, "
+            "\"an_int\" : 456, "
+            "\"a_number\" : 0.234, "
+            "\"a_string\" : \"Test\", "
+            "\"an_array\" : [1, 2, 3, 4, 5], "
+          "}";
 
-	struct example : object<struct example>
-	{
-		example()
-		: object<struct example>(),
-			a_nullable(_, "a_null"),
-			a_boolean(_, "a_boolean"),
-			an_int(_, "an_int"),
-			a_number(_, "a_number"),
-			a_string(_, "a_string"),
-			an_array(_, "an_array") {}
+  struct example : object<struct example>
+  {
+    example()
+    : object<struct example>(),
+      a_nullable(_, "a_null"),
+      a_boolean(_, "a_boolean"),
+      an_int(_, "an_int"),
+      a_number(_, "a_number"),
+      a_string(_, "a_string"),
+      an_array(_, "an_array") {}
 
-		integer a_nullable;	// Any type can be null
+    integer a_nullable; // Any type can be null
 
-		boolean a_boolean;
-		integer an_int;
-		number  a_number;
-		string  a_string;
-		array<integer> an_array;
-	} an_example;
+    boolean a_boolean;
+    integer an_int;
+    number  a_number;
+    string  a_string;
+    array<integer> an_array;
+  } an_example;
 
 
-	std::istringstream ist(json);
-	stream<impl::rapidjson>(an_example).deserialize(ist);
+  std::istringstream ist(json);
+  stream<impl::rapidjson>(an_example).deserialize(ist);
 // or
 // rapidjson::deserialize(ist, an_example);
 
-	std::cout << an_example.a_nullable.null() << ", " << an_example.a_boolean << ", " << an_example.an_int << ", "
-						<< an_example.a_number << ", " << an_example.a_string << std::endl;
+  std::cout << an_example.a_nullable.null() << ", " << an_example.a_boolean << ", " << an_example.an_int << ", "
+            << an_example.a_number << ", " << an_example.a_string << std::endl;
 
-	std::cout << "[ ";
-	for (auto&& c : an_example.an_array)
-		std::cout << c << ", ";
-	std::cout << " ]" << std::endl;
+  std::cout << "[ ";
+  for (auto&& c : an_example.an_array)
+    std::cout << c << ", ";
+  std::cout << " ]" << std::endl;
 
-	an_example.a_nullable = 25;
-	an_example.a_boolean.null(true);
-	an_example.an_int = an_example.an_int * 2;
-	an_example.a_number = an_example.a_number * 2.;
-	an_example.a_string += " again";
+  an_example.a_nullable = 25;
+  an_example.a_boolean.null(true);
+  an_example.an_int = an_example.an_int * 2;
+  an_example.a_number = an_example.a_number * 2.;
+  an_example.a_string += " again";
 
-	an_example.an_array.resize(an_example.an_array.size() + 1);
-	an_example.an_array[an_example.an_array.size() - 1] = 10;
+  an_example.an_array.resize(an_example.an_array.size() + 1);
+  an_example.an_array[an_example.an_array.size() - 1] = 10;
 
-	std::ostringstream ost;
-	stream<impl::rapidjson>(an_example).serialize(ost);
+  std::ostringstream ost;
+  stream<impl::rapidjson>(an_example).serialize(ost);
 // or
 // rapidjson::serialize(ost, true, an_example);
-	std::cout << ost.str() << std::endl;
+  std::cout << ost.str() << std::endl;
 }
 
 Output:
