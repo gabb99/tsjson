@@ -121,6 +121,44 @@ namespace tsjson
     
     void begin_array( const std::size_t s = 0 )
     {
+      push_new_context();
+      // resize using s
+    }
+    
+    void end_array( const std::size_t s = 0 )
+    {
+      restore_context();
+   }
+    
+    void begin_object( const std::size_t s = 0 )
+    {
+      // Initially empty, and top level object is anonymous
+      if (m_contextStack.empty())
+      {
+        assert(m_current_indx == 0);
+        assert(m_current_context != nullptr);
+        assert(m_current_context->id() == typeid(tsjson::object_));
+
+        // Not usefull but end_object/end_array can assert properly
+        m_contextStack.push(std::make_pair(m_current_indx, m_current_context));
+      }
+      else
+        push_new_context();
+    }
+    
+    void end_object( const std::size_t s = 0 )
+    {
+      restore_context();
+    }
+    
+    void key( const std::string& s )
+    {
+      m_current_key = s;
+    }
+    
+  private:
+    void push_new_context()
+    {
       if (m_current_context->id() == typeid(tsjson::object_))
       {
         assert(m_current_key.empty() == false);
@@ -150,56 +188,15 @@ namespace tsjson
         assert(false);
     }
     
-    void end_array( const std::size_t s = 0 )
+    void restore_context()
     {
       if (m_contextStack.empty() == false)
       {
         std::tie(m_current_indx, m_current_context) = m_contextStack.top();
         m_contextStack.pop();
       }
-    }
-    
-    void begin_object( const std::size_t s = 0 )
-    {
-      if (m_current_context->id() == typeid(tsjson::object_))
-      {
-        if (m_current_key.empty() == false)
-        {
-          tsjson::objBindings* obj_context = static_cast<tsjson::objBindings*>(m_current_context)->_.getChildObject<tsjson::objBindings>(m_current_key);
-          if (obj_context)
-          {
-            m_contextStack.push(std::make_pair(m_current_indx, m_current_context));
-            m_current_context = obj_context;
-          }
-          else
-            assert(false);
-        }
-        else if (m_current_context->id() == typeid(tsjson::arrayIterator))
-        {
-          tsjson::arrayIterator* obj_context = static_cast<tsjson::arrayIterator*>(m_current_context)->getChildObject<tsjson::arrayIterator>(m_current_indx++);
-          if (obj_context)
-          {
-            m_contextStack.push(std::make_pair(m_current_indx, m_current_context));
-            m_current_context = obj_context;
-          }
-          else
-            assert(false);
-        }
-      }
-    }
-    
-    void end_object( const std::size_t s = 0 )
-    {
-      if (m_contextStack.empty() == false)
-      {
-        std::tie(m_current_indx, m_current_context) = m_contextStack.top();
-        m_contextStack.pop();
-      }
-    }
-    
-    void key( const std::string& s )
-    {
-      m_current_key = s;
+      else
+        assert(false);
     }
   };
 }

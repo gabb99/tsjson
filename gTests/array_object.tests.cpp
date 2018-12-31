@@ -61,10 +61,10 @@ namespace
       number  ranking;
       string  name;
 
-      struct array<boolean, 3> booleans;
-      struct array<integer> integers;
-      struct array<number, 5> numbers;
-      struct array<string> strings;
+      array<boolean, 3> booleans;
+      array<integer> integers;
+      array<number, 5> numbers;
+      array<string> strings;
     };
     
   public:
@@ -121,10 +121,10 @@ namespace
     {
       simple()
       : object<struct simple>(),
-      alive(object<struct simple>::_, "alive", true),
-      age(object<struct simple>::_, "age", 34u),
-      ranking(object<struct simple>::_, "ranking", 0.125f),
-      name(object<struct simple>::_, "name", "Hi") {}
+        alive(object<struct simple>::_, "alive", true),
+        age(object<struct simple>::_, "age", 34u),
+        ranking(object<struct simple>::_, "ranking", 0.125f),
+        name(object<struct simple>::_, "name", "Hi") {}
       
       boolean alive;
       integer age;
@@ -167,10 +167,10 @@ namespace
       number  ranking;
       string  name;
       
-      struct array<boolean, 3> booleans;
-      struct array<integer> integers;
-      struct array<number, 5> numbers;
-      struct array<string> strings;
+      array<boolean, 3> booleans;
+      array<integer> integers;
+      array<number, 5> numbers;
+      array<string> strings;
     };
 
   public:
@@ -304,6 +304,57 @@ namespace
     }
   };
 
+  
+  template <tsjson::impl T>
+  class ComplexArrayTest : public ::testing::Test
+  {
+    struct simple : object<struct simple>
+    {
+      struct inner : object<struct inner>
+      {
+        inner()
+        : object<struct inner>(),
+          alive(object<struct inner>::_, "alive"),
+          age(object<struct inner>::_, "age"),
+          ranking(object<struct inner>::_, "ranking") {}
+        
+        boolean alive;
+        integer age;
+        number  ranking;
+      };
+
+      simple()
+      : object<struct simple>(),
+        name(object<struct simple>::_, "name"),
+        inners(object<struct simple>::_, "inners") {}
+      
+      string  name;
+      array<array<array<inner, 2>>> inners;
+    };
+    
+  public:
+    void TestBody()
+    {
+      simple v;
+      
+      std::istringstream ist("{ \"inners\": [[[{\"alive\": true,\"age\": 34,\"ranking\": 0.125},{\"alive\": false,\"age\": 54,\"ranking\": 0.5}]]],\"name\": \"Me\"}");
+      
+      stream<T>(v).deserialize(ist);
+      EXPECT_TRUE(v.name == "Me") << enumToString(T);
+      EXPECT_EQ(v.inners.size(), 1) << enumToString(T);
+      EXPECT_EQ(v.inners[0].size(), 1) << enumToString(T);
+      EXPECT_EQ(v.inners[0][0].size(), 2) << enumToString(T);
+
+      EXPECT_TRUE(v.inners[0][0][0].alive) << enumToString(T);
+      EXPECT_FALSE(v.inners[0][0][1].alive) << enumToString(T);
+
+      EXPECT_EQ(v.inners[0][0][0].age, 34) << enumToString(T);
+      EXPECT_EQ(v.inners[0][0][1].age, 54) << enumToString(T);
+
+      EXPECT_EQ(v.inners[0][0][0].ranking, 0.125) << enumToString(T);
+      EXPECT_EQ(v.inners[0][0][1].ranking, 0.5) << enumToString(T);
+    }
+  };
 }
 
 
@@ -344,4 +395,14 @@ TEST(top_array_serialization, ctor)
   SerializationTopLevelArrayTest<impl::nlohmannj_son>().TestBody();
   SerializationTopLevelArrayTest<impl::minijson>().TestBody();
   SerializationTopLevelArrayTest<impl::taojson>().TestBody();
+}
+
+TEST(complex_array, ctor)
+{
+  ComplexArrayTest<impl::cjson>().TestBody();
+  ComplexArrayTest<impl::rapidjson>().TestBody();
+  ComplexArrayTest<impl::sajson>().TestBody();
+  ComplexArrayTest<impl::nlohmannj_son>().TestBody();
+  ComplexArrayTest<impl::minijson>().TestBody();
+  ComplexArrayTest<impl::taojson>().TestBody();
 }

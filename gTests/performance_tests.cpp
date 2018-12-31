@@ -185,17 +185,17 @@ TEST(tsjson, canada_minijson)
   CanadaTest<impl::minijson>().TestBody();
 }
 
-TEST(tsjson, DISABLED_canada_taojson)
+TEST(tsjson, canada_taojson)
 {
   CanadaTest<impl::taojson>().TestBody();
 }
 
-TEST(tsjson, DISABLED_canada_rapidjson)
+TEST(tsjson, canada_rapidjson)
 {
   CanadaTest<impl::rapidjson>().TestBody();
 }
 
-TEST(tsjson, DISABLED_canada_nlohmannjson)
+TEST(tsjson, canada_nlohmannjson)
 {
   CanadaTest<impl::nlohmannj_son>().TestBody();
 }
