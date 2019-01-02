@@ -70,7 +70,7 @@ namespace
         break;
         
       default:
-        assert(false && "unknown node type");
+        break;
     }
   }
 
@@ -128,7 +128,7 @@ namespace
         break;
         
       default:
-        assert(false && "unknown node type");
+        break;
     }
   }
 }
@@ -162,6 +162,7 @@ namespace sajson
         }
       }
       else
+        // mis-match between top level object/array
         assert(false);
     }
   }

@@ -77,6 +77,7 @@ namespace
 
     void binary( const tao::binary_view& b )
     {
+      // todo Implement
       assert(false);
     }
   
@@ -127,8 +128,10 @@ namespace
                         writer.end_array();
                       }
                       
-                      else if (element.id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(element.id() == typeid(tsjson::object_));
+
                         writer.begin_object();
                         
                         serialize_impl(writer,
@@ -136,9 +139,6 @@ namespace
                         
                         writer.end_object();
                       }
-                      
-                      else
-                        assert(false);
                       
                       writer.element();
                     });
@@ -186,8 +186,10 @@ namespace
                         writer.end_array();
                       }
 
-                      else if (it.second->id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(it.second->id() == typeid(tsjson::object_));
+
                         writer.begin_object();
                         
                         serialize_impl(writer,
@@ -195,9 +197,6 @@ namespace
                         
                         writer.end_object();
                       }
-                      
-                      else
-                        assert(false);
 
                       writer.element();
                     });
@@ -212,15 +211,14 @@ namespace
       serialize_impl(writer, static_cast<const tsjson::objBindings&>(root)._);
       writer.end_object();
     }
-    else if (root.id() == typeid(tsjson::arrayIterator))
+    else
     {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+
       writer.begin_array();
       serialize_impl(writer, static_cast<const tsjson::arrayIterator&>(root));
       writer.end_array();
     }
-    else
-      assert(false);
-
   }
 }
 

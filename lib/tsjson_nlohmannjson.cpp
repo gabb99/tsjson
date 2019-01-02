@@ -149,14 +149,13 @@ namespace
                                        static_cast<const tsjson::arrayIterator&>(element));
                       }
                       
-                      else if (element.id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(element.id() == typeid(tsjson::object_));
+
                         serialize_impl(j_object[indx++],
                                        static_cast<const tsjson::objBindings&>(element)._);
                       }
-                      
-                      else
-                        assert(false);
                     });
   }
 
@@ -198,14 +197,13 @@ namespace
                                        static_cast<tsjson::arrayIterator&>(*it.second));
                       }
 
-                      else if (it.second->id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(it.second->id() == typeid(tsjson::object_));
+
                         serialize_impl(j_object[it.first],
                                        static_cast<tsjson::objBindings&>(*it.second)._);
                       }
-                      
-                      else
-                        assert(false);
                     });
   }
 }
@@ -218,11 +216,14 @@ namespace nlohmann
     json j_object;
 
     if (root.id() == typeid(tsjson::object_))
+    {
       serialize_impl(j_object, static_cast<const tsjson::objBindings&>(root)._);
-    else if (root.id() == typeid(tsjson::arrayIterator))
-      serialize_impl(j_object, static_cast<const tsjson::arrayIterator&>(root));
+    }
     else
-      assert(false);
+    {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+      serialize_impl(j_object, static_cast<const tsjson::arrayIterator&>(root));
+    }
 
     ost << j_object;
   }
@@ -233,11 +234,14 @@ namespace nlohmann
     json j_object;
 
     if (root.id() == typeid(tsjson::object_))
+    {
       serialize_impl(j_object, static_cast<const tsjson::objBindings&>(root)._);
-    else if (root.id() == typeid(tsjson::arrayIterator))
-      serialize_impl(j_object, static_cast<const tsjson::arrayIterator&>(root));
+    }
     else
-      assert(false);
+    {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+      serialize_impl(j_object, static_cast<const tsjson::arrayIterator&>(root));
+    }
 
     switch (t)
     {

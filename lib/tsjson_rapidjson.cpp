@@ -155,8 +155,10 @@ namespace
                         writer.EndArray();
                       }
                       
-                      else if (element.id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(element.id() == typeid(tsjson::object_));
+
                         writer.StartObject();
                         
                         serialize_impl(writer,
@@ -164,9 +166,6 @@ namespace
                         
                         writer.EndObject();
                       }
-                      
-                      else
-                        assert(false);
                     });
   }
 
@@ -212,8 +211,10 @@ namespace
                         writer.EndArray();
                       }
 
-                      else if (it.second->id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(it.second->id() == typeid(tsjson::object_));
+
                         writer.StartObject();
                         
                         serialize_impl(writer,
@@ -221,9 +222,6 @@ namespace
                         
                         writer.EndObject();
                       }
-                      
-                      else
-                        assert(false);
                     });
   }
  
@@ -233,11 +231,14 @@ namespace
     writer.StartObject();
  
     if (root.id() == typeid(tsjson::object_))
+    {
       serialize_impl(writer, static_cast<const tsjson::objBindings&>(root)._);
-    else if (root.id() == typeid(tsjson::arrayIterator))
-      serialize_impl(writer, static_cast<const tsjson::arrayIterator&>(root));
+    }
     else
-      assert(false);
+    {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+      serialize_impl(writer, static_cast<const tsjson::arrayIterator&>(root));
+    }
 
     writer.EndObject();
   }

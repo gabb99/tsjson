@@ -55,8 +55,10 @@ namespace
                         position_writer.close();
                       }
                       
-                      else if (element.id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(element.id() == typeid(tsjson::object_));
+
                         minijson::object_writer position_writer = writer.nested_object();
                         
                         serialize_impl(position_writer,
@@ -64,9 +66,6 @@ namespace
                         
                         position_writer.close();
                       }
-                      
-                      else
-                        assert(false);
                     });
     
     writer.close();
@@ -111,8 +110,10 @@ namespace
                         position_writer.close();
                       }
 
-                      else if (it.second->id() == typeid(tsjson::object_))
+                      else
                       {
+                        assert(it.second->id() == typeid(tsjson::object_));
+
                         minijson::object_writer position_writer = writer.nested_object(it.first.c_str());
 
                         serialize_impl(position_writer,
@@ -120,9 +121,6 @@ namespace
 
                         position_writer.close();
                       }
-                      
-                      else
-                        assert(false);
                     });
 
     writer.close();
@@ -251,15 +249,15 @@ namespace minijson
       
       serialize_impl(writer, static_cast<const tsjson::objBindings&>(root)._);
     }
-    else if (root.id() == typeid(tsjson::arrayIterator))
+    else if
     {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+
       minijson::array_writer writer(ost,
                                      minijson::writer_configuration().pretty_printing(bPrettyPrint));
       
       serialize_impl(writer, static_cast<const tsjson::arrayIterator&>(root));
     }
-    else
-      assert(false);
   }
   
   
@@ -274,15 +272,15 @@ namespace minijson
                                Parse(ctx, static_cast<tsjson::objBindings&>(root)._, name, value);
                              });
     }
-    else if (root.id() == typeid(tsjson::arrayIterator))
+    else
     {
+      assert(root.id() == typeid(tsjson::arrayIterator));
+
       unsigned indx = 0;
       minijson::parse_array(ctx, [&](const minijson::value& value)
                             {
                               Parse(ctx, static_cast<tsjson::arrayIterator&>(root), indx++, value);
                             });
     }
-    else
-      assert(false);
   }
 }
