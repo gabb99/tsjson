@@ -57,17 +57,17 @@ namespace
 
     void end_array( const std::size_t s = 0 )
     {
-      sax_helper.end_array(s);
+      sax_helper.end_array();
     }
 
     void begin_object( const std::size_t s = 0 )
     {
-      sax_helper.begin_object(s);
+      sax_helper.begin_object();
     }
 
     void end_object( const std::size_t s = 0 )
     {
-      sax_helper.end_object(s);
+      sax_helper.end_object();
     }
 
     void key( const std::string_view& s )

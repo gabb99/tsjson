@@ -66,9 +66,9 @@ public:
 
   
   // called when an object or array begins or ends, resp. The number of elements is passed (or -1 if not known)
-  bool start_object(size_t s)
+  bool start_object(size_t)
   {
-    sax_helper.begin_object(s);
+    sax_helper.begin_object();
     return true;
   }
 
