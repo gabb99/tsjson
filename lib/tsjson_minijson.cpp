@@ -249,7 +249,7 @@ namespace minijson
       
       serialize_impl(writer, static_cast<const tsjson::objBindings&>(root)._);
     }
-    else if
+    else
     {
       assert(root.id() == typeid(tsjson::arrayIterator));
 
