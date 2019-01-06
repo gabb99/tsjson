@@ -143,6 +143,40 @@ namespace
                                           "{\"name\":\"Hi\", \"alive\":true, \"age\":34, \"ranking\":0.125 }, "
                                           "{\"name\":\"Hi\", \"alive\":true, \"age\":34, \"ranking\":0.125 } ]");
 
+      {
+        array<simple,4> w;
+
+        std::istringstream ist("[ {\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 }, "
+                               "{\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 }, "
+                               "{\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 }, "
+                               "{\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 } ]");
+        stream<T>(w).deserialize(ist);
+   
+        for (auto&& c : w)
+        {
+          EXPECT_EQ(c.name, "Ho") << enumToString(T);
+          EXPECT_FALSE(c.alive) << enumToString(T);
+          EXPECT_EQ(c.age, 56) << enumToString(T);
+          EXPECT_EQ(c.ranking, 0.5) << enumToString(T);
+        }
+      }
+
+      {
+        array<simple> w;
+        
+        std::istringstream ist("[ {\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 }, "
+                               "{\"name\":\"Ho\", \"alive\":false, \"age\":56, \"ranking\":0.5 } ]");
+        stream<T>(w).deserialize(ist);
+
+        EXPECT_EQ(w.size(), 2);
+        for (auto&& c : w)
+        {
+          EXPECT_EQ(c.name, "Ho") << enumToString(T);
+          EXPECT_FALSE(c.alive) << enumToString(T);
+          EXPECT_EQ(c.age, 56) << enumToString(T);
+          EXPECT_EQ(c.ranking, 0.5) << enumToString(T);
+        }
+      }
     }
   };
   
