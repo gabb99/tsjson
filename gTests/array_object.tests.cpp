@@ -154,7 +154,7 @@ namespace
    
         for (auto&& c : w)
         {
-          EXPECT_EQ(c.name, "Ho") << enumToString(T);
+          EXPECT_TRUE(c.name == "Ho") << enumToString(T);
           EXPECT_FALSE(c.alive) << enumToString(T);
           EXPECT_EQ(c.age, 56) << enumToString(T);
           EXPECT_EQ(c.ranking, 0.5) << enumToString(T);
@@ -171,7 +171,7 @@ namespace
         EXPECT_EQ(w.size(), 2);
         for (auto&& c : w)
         {
-          EXPECT_EQ(c.name, "Ho") << enumToString(T);
+          EXPECT_TRUE(c.name == "Ho") << enumToString(T);
           EXPECT_FALSE(c.alive) << enumToString(T);
           EXPECT_EQ(c.age, 56) << enumToString(T);
           EXPECT_EQ(c.ranking, 0.5) << enumToString(T);
